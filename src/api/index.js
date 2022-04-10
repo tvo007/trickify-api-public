@@ -17,10 +17,6 @@ router.get ('/', (req, res) => {
 router.use('/users', users);
 router.use('/samplers', samplers);
 router.use('/scenes', scenes);
-
-
-
-//not working yet
 router.use('/auth', auth);
 
 module.exports = router;

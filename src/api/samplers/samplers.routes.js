@@ -1,6 +1,9 @@
 const asyncHandler = require ('express-async-handler');
 const Sampler = require ('./samplers.model');
 const express = require ('express');
+const {getSamplers, getSamplerById} = require ('./samplers.service');
+const {NotFoundError} = require ('objection');
+const e = require ('cors');
 // const getAddresses = asyncHandler(async (req, res, next) => {
 
 //   })
@@ -8,37 +11,42 @@ const express = require ('express');
 const router = express.Router ();
 //todo: actuially call queries
 
-router.get ('/', async (req, res) => {
-  const samplers = await Sampler.query ()
-    .select ('id', 'name', 'url', 'created_by', 'runtime', 'upload_date', 'created_at', 'updated_at')
-    .where ('deleted_at', null);
-  res.json (samplers);
-});
-
 router.get (
   '/',
   asyncHandler (async (req, res, next) => {
     try {
-      const samplers = await Sampler.query ().where ('deleted_at', null);
+      const samplers = await getSamplers ();
       res.json (samplers);
     } catch (error) {
-      next (error);
+      res.send (500);
+      console.log (error);
+      throw new Error ('Something went wrong.');
     }
   })
 );
 
+// router.get (
+//   '/',
+//   asyncHandler (async (req, res, next) => {
+//     try {
+//       const samplers = await Sampler.query ().where ('deleted_at', null);
+//       res.json (samplers);
+//     } catch (error) {
+//       next (error);
+//     }
+//   })
+// );
+
 router.get (
   '/:id',
-  asyncHandler (async (req, res, next) => {
+  asyncHandler (async (req, res, next, error) => {
     try {
-      const samplers = await Sampler.query ()
-        .where ('deleted_at', null)
-        .andWhere ('id', req.params.id)
-        .first ();
-      // .withGraphFetched('product_infos')
-      res.json (samplers);
+      const sampler = await getSamplerById (req.params.id);
+      res.json (sampler);
     } catch (error) {
-      next (error);
+      res.status (404);
+      console.log (error);
+      throw new Error ('Sampler does not exist.');
     }
   })
 );
@@ -83,4 +91,4 @@ router.delete (
   })
 );
 
-module.exports = router
+module.exports = router;

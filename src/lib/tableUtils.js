@@ -3,6 +3,9 @@ function addDefaultColumns (table) {
   table.timestamps (false, true);
   table.datetime ('deleted_at');
   // table.datetime ('deleted_at').notNullable ().default (Knex.now);
+  // table.datetime ('created_at').notNullable()
+  // table.datetime ('updated_at').notNullable()
+
 }
 
 const createNameTable = (knex, table_name) => {

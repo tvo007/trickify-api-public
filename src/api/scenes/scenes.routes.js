@@ -1,6 +1,7 @@
 const asyncHandler = require ('express-async-handler');
 const Scene = require ('./scenes.model');
 const express = require ('express');
+const {getCsvScenes} = require ('./scenes.service');
 // const getAddresses = asyncHandler(async (req, res, next) => {
 
 //   })
@@ -12,7 +13,13 @@ router.get (
   '/',
   asyncHandler (async (req, res, next) => {
     try {
-      const scenes = await Scene.query ().where ('deleted_at', null);
+      const scenes = await Scene.query ()
+        .select ('id', 'timestamp', 'tricks', 'created_at', 'updated_at')
+        .withGraphFetched ('sampler')
+        .modifyGraph ('sampler', builder => {
+          builder.select ('id', 'name');
+        })
+        .where ('deleted_at', null);
       res.json (scenes);
     } catch (error) {
       next (error);
@@ -30,6 +37,18 @@ router.get (
         .first ();
       // .withGraphFetched('product_infos')
       res.json (scenes);
+    } catch (error) {
+      next (error);
+    }
+  })
+);
+
+router.get (
+  '/csv/get',
+  asyncHandler (async (req, res, next) => {
+    try {
+      const scenes = await getCsvScenes ();
+      res.send (scenes);
     } catch (error) {
       next (error);
     }
@@ -76,4 +95,4 @@ router.delete (
   })
 );
 
-module.exports = router
+module.exports = router;

@@ -23,6 +23,11 @@
             "type": "integer",
             "title": "Timestamp of tricks"
         },
+        "sampler_id": {
+            "$id": "#/properties/sampler_id",
+            "type": "string",
+            "title": "Ref to sampler"
+        },
         "created_at": {
             "$id": "#/properties/created_at",
             "type": "string",
