@@ -1,7 +1,7 @@
 const asyncHandler = require ('express-async-handler');
 const Scene = require ('./scenes.model');
 const express = require ('express');
-const {getCsvScenes} = require ('./scenes.service');
+const {getCsvScenes, addScene} = require ('./scenes.service');
 // const getAddresses = asyncHandler(async (req, res, next) => {
 
 //   })
@@ -59,8 +59,8 @@ router.post (
   '/',
   asyncHandler (async (req, res, next) => {
     try {
-      const scene = await Scene.query ().insert (req.body);
-      res.json (scene);
+      const scene = await addScene(req.body)
+      res.json(scene)
     } catch (error) {
       next (error);
     }

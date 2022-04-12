@@ -22,7 +22,7 @@ const getSamplerById = async id => {
     .where ('deleted_at', null)
     .andWhere ('id', id)
     .first ()
-  // .withGraphFetched('product_infos')
+    .withGraphFetched ('scenes');
   return sampler;
 };
 
