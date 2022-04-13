@@ -1,7 +1,7 @@
 const asyncHandler = require ('express-async-handler');
 const Scene = require ('./scenes.model');
 const express = require ('express');
-const {getCsvScenes, addScene} = require ('./scenes.service');
+const {getCsvScenes, addScene, searchScenes} = require ('./scenes.service');
 // const getAddresses = asyncHandler(async (req, res, next) => {
 
 //   })
@@ -56,11 +56,23 @@ router.get (
 );
 
 router.post (
+  '/search',
+  asyncHandler (async (req, res, next) => {
+    try {
+      const scenes = await searchScenes (req.body);
+      res.send (scenes);
+    } catch (error) {
+      next (error);
+    }
+  })
+);
+
+router.post (
   '/',
   asyncHandler (async (req, res, next) => {
     try {
-      const scene = await addScene(req.body)
-      res.json(scene)
+      const scene = await addScene (req.body);
+      res.json (scene);
     } catch (error) {
       next (error);
     }
